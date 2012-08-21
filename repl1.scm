@@ -34,28 +34,31 @@
 
 ;;read: uses recursion to construct nested data structures while reading through char input L -> R
  ;;
- ;;micro-read : only handles a few basic types:: symbols, non-neg integers, and lists; + little error-checking
+ ;;micro-read : should only handle a few basic types:: symbols, non-neg integers, and lists; + little error-checking
  ;;so read must recognize nested structures, given read-token which reads...tokens...
+
+(define left-paren-token (list '*left-parenthesis-token*)) 
+(define right-paren-token (list '*right-parenthesis-token*))
 
 (define (read-token)
     (let ((first-char (read-char)))
         (cond 
             ((char-whitespace? first-char)
                 (read-token))
-            ((eq? first-char #\( )
-             left-paren-token)
-            ((eq? first-char #\) )
-             right-paren-token)
+            ((eq? first-char #\()
+             left-paren-token )
+            ((eq? first-char #\))
+             right-paren-token )
             ((char-alphabetic? first-char)
                 (read-identifier first-char))
             ((char-numeric? first-char)
                 (read-number first-char))
             (else
-                (error "illegal lexical syntax")))))
+                (error "illegal lexical syntax" )))))
                 
-;; some of the predicates in read-token must be defined ourselves
+;; some of the predicates in read-token must be defined by programmer
 
-;;; whitespace? -- checks whether char is space or newline
+;;; whitespace? -- checks whether char is space or newline, called char-whitespace?
 (define (char-whitespace? char)
     (or (eq? char #\space)
         (eq? char #\newline)))
@@ -63,10 +66,7 @@
 ;(define left-paren-token (list '*left-parenthesis-token*)) 
 ;(define right-paren-token (list '*right-parenthesis-token*))
 
-(define (left-paren-token? thing)
-  (eq? thing left-paren-token))
-(define (right-paren-token thing)
-  (eq? thing right-paren-token))
+
 
 
 ;; read-identifier: if read a letter, this is a symbol, so finish reading it w/ this
